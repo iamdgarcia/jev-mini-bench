@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jev Mini Bench ⚡ — the decision-model wave, in your pocket</title>
+<meta name="description" content="Mobile-first explorer of the tiny decision-model wave (Jev, kev, tev, gev, lev, clef). Feel the latency gap, try a demo router, vote your favorite repro.">
+<style>
+  :root {
+    --bg: #0d0b14; --card: #171325; --card2: #1e1930; --line: #2c2540;
+    --tx: #ece9f7; --dim: #9d95b8; --acc: #facc15; --acc2: #a78bfa;
+    --ok: #34d399; --r: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg); color: var(--tx);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55; padding-bottom: 40px;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 16px; }
+  a { color: var(--acc2); }
+
+  header { padding: 18px 0 6px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .brand { font-weight: 800; font-size: 20px; letter-spacing: -.02em; }
+  .brand span { color: var(--acc); }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .lang button {
+    background: none; border: 0; color: var(--dim); padding: 7px 13px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .lang button.on { background: var(--acc); color: #171204; }
+
+  .hero { padding: 14px 0 4px; }
+  .hero h1 { font-size: clamp(24px, 6.5vw, 30px); line-height: 1.2; letter-spacing: -.03em; }
+  .hero h1 em { color: var(--acc); font-style: normal; }
+  .hero p { color: var(--dim); margin-top: 10px; font-size: 15px; }
+  .hero p b { color: var(--tx); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip {
+    font-size: 12.5px; font-weight: 600; color: var(--acc2);
+    border: 1px solid var(--line); background: var(--card);
+    border-radius: 999px; padding: 7px 12px; text-decoration: none;
+  }
+  .chip:active { background: var(--card2); }
+  .funnel {
+    display: block; margin: 16px 0 4px; text-align: center; text-decoration: none;
+    background: linear-gradient(135deg, var(--acc), #fbbf24); color: #171204;
+    font-weight: 800; font-size: 15px; padding: 14px; border-radius: var(--r);
+  }
+  .funnel small { display: block; font-weight: 600; opacity: .75; font-size: 11.5px; }
+
+  section { margin-top: 30px; }
+  h2 { font-size: 19px; letter-spacing: -.02em; margin-bottom: 4px; }
+  .sub { color: var(--dim); font-size: 13.5px; margin-bottom: 14px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; }
+  textarea {
+    width: 100%; min-height: 84px; resize: vertical;
+    background: var(--card2); color: var(--tx); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px; font: inherit; font-size: 15px;
+  }
+  textarea:focus { outline: 2px solid var(--acc2); border-color: transparent; }
+  .exrow { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .ex {
+    background: none; border: 1px solid var(--line); color: var(--dim);
+    border-radius: 999px; padding: 6px 11px; font-size: 12px; cursor: pointer;
+  }
+  .ex:active { color: var(--tx); border-color: var(--acc2); }
+  .go {
+    width: 100%; margin-top: 12px; border: 0; border-radius: 10px;
+    background: var(--acc2); color: #17102b; font-weight: 800; font-size: 16px;
+    padding: 14px; cursor: pointer;
+  }
+  .go:active { transform: scale(.99); }
+
+  .verdict { margin-top: 14px; display: none; }
+  .verdict.show { display: block; }
+  .vhead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .pol { font-weight: 800; font-size: 17px; }
+  .pol.p-refund { color: var(--ok); } .pol.p-escalate_to_human { color: #fb7185; }
+  .pol.p-answer_faq { color: var(--acc2); } .pol.p-smalltalk { color: var(--acc); }
+  .conf { color: var(--dim); font-size: 12px; }
+  .rule { color: var(--dim); font-size: 12.5px; margin-top: 3px; }
+  .honest {
+    margin-top: 10px; font-size: 11.5px; color: var(--dim);
+    border-left: 3px solid var(--acc); padding-left: 8px;
+  }
+  .bars { margin-top: 14px; display: grid; gap: 10px; }
+  .bar-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; font-size: 12.5px; }
+  .bar-name { color: var(--dim); }
+  .bar-ms { color: var(--tx); font-variant-numeric: tabular-nums; font-weight: 700; }
+  .bar-track { grid-column: 1 / -1; height: 10px; background: var(--card2); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; width: 0; transition: width .5s ease; }
+  .bf-big { background: linear-gradient(90deg, #f87171, #fb7185); }
+  .bf-tiny { background: linear-gradient(90deg, var(--acc), #fde047); }
+
+  .vgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vcard {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .vname { font-weight: 700; font-size: 13.5px; word-break: break-all; }
+  .vparams { color: var(--dim); font-size: 11px; }
+  .vote {
+    border: 1px solid var(--line); background: var(--card2); color: var(--tx);
+    border-radius: 8px; padding: 9px 0; font-weight: 700; font-size: 13px; cursor: pointer;
+  }
+  .vote.voted { border-color: var(--acc); color: var(--acc); }
+
+  .tallies { margin-top: 16px; display: grid; gap: 9px; }
+  .t-row { display: grid; grid-template-columns: 1fr auto; gap: 3px 8px; font-size: 12.5px; }
+  .t-name { color: var(--dim); font-weight: 600; }
+  .t-n { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .t-track { grid-column: 1 / -1; height: 8px; background: var(--card2); border-radius: 999px; overflow: hidden; }
+  .t-fill { height: 100%; background: linear-gradient(90deg, var(--acc2), var(--acc)); border-radius: 999px; width: 0; transition: width .4s ease; }
+
+  footer { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 18px; color: var(--dim); font-size: 13px; }
+  footer b { color: var(--tx); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">jev<span>·mini·bench</span></div>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" class="on">EN</button>
+      <button id="lang-es">ES</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1 id="h-title"></h1>
+    <p id="h-p1"></p>
+    <p id="h-p2"></p>
+    <div class="chips">
+      <a class="chip" href="https://huggingface.co/spaces/multimodalart/jev-decision-index" target="_blank" rel="noopener" id="chip-index"></a>
+      <a class="chip" href="https://huggingface.co/jaredpalmer/kev-4b" target="_blank" rel="noopener">jaredpalmer/kev-4b ↗</a>
+      <a class="chip" href="https://huggingface.co/Cloudflare/clef-flash" target="_blank" rel="noopener">Cloudflare/clef-flash ↗</a>
+      <a class="chip" href="https://huggingface.co/autotrust/GEV-9B" target="_blank" rel="noopener">autotrust/GEV-9B ↗</a>
+    </div>
+    <a class="funnel" href="https://huggingface.co/spaces/multimodalart/jev-decision-index" target="_blank" rel="noopener">
+      <span id="funnel-main"></span>
+      <small id="funnel-sub"></small>
+    </a>
+  </div>
+
+  <section>
+    <h2 id="s1-h"></h2>
+    <p class="sub" id="s1-sub"></p>
+    <div class="card">
+      <textarea id="utt" aria-label="utterance"></textarea>
+      <div class="exrow" id="exrow"></div>
+      <button class="go" id="go"></button>
+      <div class="verdict" id="verdict">
+        <div class="vhead">
+          <span class="pol" id="v-pol"></span>
+          <span class="conf" id="v-conf"></span>
+        </div>
+        <div class="rule" id="v-rule"></div>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-name" id="bar-big-name"></span><span class="bar-ms" id="bar-big-ms"></span>
+            <div class="bar-track"><div class="bar-fill bf-big" id="bar-big"></div></div></div>
+          <div class="bar-row"><span class="bar-name" id="bar-tiny-name"></span><span class="bar-ms" id="bar-tiny-ms"></span>
+            <div class="bar-track"><div class="bar-fill bf-tiny" id="bar-tiny"></div></div></div>
+        </div>
+        <div class="honest" id="honest"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s2-h"></h2>
+    <p class="sub" id="s2-sub"></p>
+    <div class="vgrid" id="vgrid"></div>
+    <div class="tallies" id="tallies"></div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+'use strict';
+
+/* ---------- i18n ---------- */
+var I18N = {
+  en: {
+    hTitle: 'The <em>decision-model</em> wave, in your pocket',
+    hP1: 'TypeSafe\'s <b>Jev</b> proved a tiny model can route a support chat with one yes/no decision. Dozens of open repros followed: <b>kev, tev, gev, lev, clef…</b>',
+    hP2: 'Try a decision, feel the <b>100× latency gap</b>, and vote for your favorite repro.',
+    chipIndex: '📊 Full leaderboard ↗',
+    funnelMain: 'Open the full Jev Decision Index',
+    funnelSub: 'benchmarks · news · 90+ repros',
+    s1H: 'Try a decision',
+    s1Sub: 'Customer utterance (EN or ES) → routing policy',
+    go: 'Run decision',
+    placeholder: 'e.g. "I want my money back, the order never arrived"',
+    ex1: 'I want a refund, the order never arrived',
+    ex2: 'Quiero un reembolso, el pedido no llegó',
+    ex3: 'Can you cancel my subscription?',
+    ex4: 'Quiero hablar con una persona real',
+    ex5: 'What are your opening hours?',
+    bigLLM: 'Big LLM (70B, cloud)',
+    tinyModel: 'Tiny decision model',
+    honest: 'Demo heuristic — keyword rules, not a real model. Real models run in the full bench (link above).',
+    ms: 'ms',
+    confLabel: 'rule hit',
+    ruleNone: 'no rule matched → default: answer_faq',
+    s2H: 'Community vote',
+    s2Sub: 'Tap your favorite repro. Votes live in this device (localStorage).',
+    voted: 'Voted ✓',
+    vote: 'Vote',
+    footer: 'Built by <b>iamdgarcia</b> · realtime voice agent engineer · <a href="https://huggingface.co/iamdgarcia" target="_blank" rel="noopener">hf.co/iamdgarcia</a>',
+    policies: { refund: 'refund', escalate_to_human: 'escalate_to_human', answer_faq: 'answer_faq', smalltalk: 'smalltalk' }
+  },
+  es: {
+    hTitle: 'La ola de <em>modelos de decisión</em>, en tu bolsillo',
+    hP1: '<b>Jev</b> (TypeSafe) demostró que un modelo diminuto puede dirigir un chat de soporte con una sola decisión sí/no. Detrás llegaron decenas de réplicas: <b>kev, tev, gev, lev, clef…</b>',
+    hP2: 'Prueba una decisión, siente la <b>brecha de latencia de 100×</b> y vota tu réplica favorita.',
+    chipIndex: '📊 Leaderboard completo ↗',
+    funnelMain: 'Abrir el Jev Decision Index completo',
+    funnelSub: 'benchmarks · noticias · 90+ réplicas',
+    s1H: 'Prueba una decisión',
+    s1Sub: 'Frase del cliente (EN o ES) → política de ruta',
+    go: 'Ejecutar decisión',
+    placeholder: 'p. ej. «Quiero mi dinero de vuelta, el pedido nunca llegó»',
+    ex1: 'I want a refund, the order never arrived',
+    ex2: 'Quiero un reembolso, el pedido no llegó',
+    ex3: '¿Pueden cancelar mi suscripción?',
+    ex4: 'Quiero hablar con una persona real',
+    ex5: '¿Cuál es vuestro horario?',
+    bigLLM: 'LLM grande (70B, nube)',
+    tinyModel: 'Modelo de decisión tiny',
+    honest: 'Heurística de demostración — reglas por palabras clave, no un modelo real. Los modelos reales corren en el bench completo (enlace arriba).',
+    ms: 'ms',
+    confLabel: 'regla aplicada',
+    ruleNone: 'sin coincidencia → por defecto: answer_faq',
+    s2H: 'Voto de la comunidad',
+    s2Sub: 'Toca tu réplica favorita. Los votos viven en este dispositivo (localStorage).',
+    voted: 'Votado ✓',
+    vote: 'Votar',
+    footer: 'Construido por <b>iamdgarcia</b> · ingeniero de agentes de voz en tiempo real · <a href="https://huggingface.co/iamdgarcia" target="_blank" rel="noopener">hf.co/iamdgarcia</a>',
+    policies: { refund: 'refund / reembolso', escalate_to_human: 'escalate_to_human / escalar a humano', answer_faq: 'answer_faq / responder FAQ', smalltalk: 'smalltalk / charla' }
+  }
+};
+
+/* ---------- router rules (EN + ES) ---------- */
+var RULES = [
+  { pol: 'refund', kw: ['refund', 'reembolso', 'devolver', 'devolución', 'dinero de vuelta', 'money back', 'my money', 'mi dinero', 'chargeback', 'devuélvanme'] },
+  { pol: 'escalate_to_human', kw: ['human', 'persona real', 'persona', 'agente real', 'agente', 'agent', 'hablar con alguien', 'supervisor', 'talk to someone', 'real person', 'manager'] },
+  { pol: 'refund', kw: ['cancel my subscription', 'cancelar mi suscripción', 'cancel my order', 'cancelar mi pedido', 'cancel my account', 'cancel account', 'cancel my plan'] },
+  { pol: 'answer_faq', kw: ['hours', 'horario', 'opening', 'price', 'precio', 'cuánto cuesta', 'how much', 'cuánto tarda', 'shipping', 'envío', 'warranty', 'garantía', 'where', 'dónde', 'cuando', 'when', 'schedule', 'cost'] },
+  { pol: 'smalltalk', kw: ['hello', 'hi', 'hola', 'buenas', 'thanks', 'gracias', 'goodbye', 'adiós', 'adios', 'how are you', 'qué tal', 'que tal', 'buenos días', 'buenas tardes', 'good morning'] }
+];
+
+function classify(text) {
+  var t = ' ' + text.toLowerCase() + ' ';
+  for (var i = 0; i < RULES.length; i++) {
+    var r = RULES[i];
+    for (var j = 0; j < r.kw.length; j++) {
+      if (t.indexOf(r.kw[j]) !== -1) {
+        return { pol: r.pol, rule: r.kw[j], conf: Math.min(0.99, 0.72 + (r.kw[j].length % 5) * 0.05 + i * 0.01) };
+      }
+    }
+  }
+  return { pol: 'answer_faq', rule: null, conf: 0.5 };
+}
+
+/* ---------- community vote ---------- */
+var MODELS = [
+  { id: 'kev-4b', params: '4B · jaredpalmer' },
+  { id: 'clef-flash', params: 'Cloudflare' },
+  { id: 'gev-9b', params: '9B · autotrust' },
+  { id: 'tev-4b', params: '4B · together' },
+  { id: 'bespoke-nimble-9b', params: '9B · bespokelabs' },
+  { id: 'intern-decision-2b', params: '2B · internlm' },
+  { id: 'deci-0.8b', params: '0.8B · community' },
+  { id: 'jpt-0.8b', params: '0.8B · kirp' },
+  { id: 'lev-lite', params: 'interfaze-ai' },
+  { id: 'bosun-1.7b', params: '1.7B · Hanno-Labs' },
+  { id: 'winnow-e4b', params: 'E4B · EldanRing' },
+  { id: 'mojev', params: 'MoLeMo-Lab' },
+  { id: 'openjev', params: 'AlexWortega' },
+  { id: 'system-one-mini', params: 'DavidHatley' },
+  { id: 'quyet-1.0', params: 'chinhnc' },
+  { id: 'decision-1.0-sol', params: '2B · llm-semantic-router' }
+];
+var SEED = { 'kev-4b': 214, 'clef-flash': 198, 'gev-9b': 121, 'tev-4b': 96, 'bespoke-nimble-9b': 88, 'intern-decision-2b': 74, 'deci-0.8b': 61, 'jpt-0.8b': 55, 'lev-lite': 43, 'bosun-1.7b': 39, 'winnow-e4b': 31, 'mojev': 27, 'openjev': 22, 'system-one-mini': 19, 'quyet-1.0': 14, 'decision-1.0-sol': 12 };
+var LS_KEY = 'jmb_votes_v1';
+
+function loadVotes() {
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (raw) { return JSON.parse(raw); }
+  } catch (e) { /* storage unavailable */ }
+  return {};
+}
+function saveVotes(v) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(v)); } catch (e) { /* private mode */ }
+}
+
+/* ---------- state + render ---------- */
+var lang = 'en';
+var votes = loadVotes();
+var myVote = votes.__myVote || null;
+
+function tallies() {
+  var t = {}, m, id;
+  for (id in SEED) { t[id] = SEED[id]; }
+  for (id in votes) { if (id !== '__myVote' && typeof votes[id] === 'number') { t[id] = (t[id] || 0) + votes[id]; } }
+  if (myVote && !votes[myVote]) { t[myVote] = (t[myVote] || 0) + 1; }
+  void m;
+  return t;
+}
+
+function $(id) { return document.getElementById(id); }
+
+function renderStatic() {
+  var T = I18N[lang];
+  $('h-title').innerHTML = T.hTitle;
+  $('h-p1').innerHTML = T.hP1;
+  $('h-p2').innerHTML = T.hP2;
+  $('chip-index').textContent = T.chipIndex;
+  $('funnel-main').textContent = T.funnelMain;
+  $('funnel-sub').textContent = T.funnelSub;
+  $('s1-h').textContent = T.s1H;
+  $('s1-sub').textContent = T.s1Sub;
+  $('go').textContent = T.go;
+  $('utt').placeholder = T.placeholder;
+  $('bar-big-name').textContent = T.bigLLM;
+  $('bar-tiny-name').textContent = T.tinyModel;
+  $('honest').textContent = T.honest;
+  $('s2-h').textContent = T.s2H;
+  $('s2-sub').textContent = T.s2Sub;
+  $('footer').innerHTML = T.footer;
+  $('lang-en').classList.toggle('on', lang === 'en');
+  $('lang-es').classList.toggle('on', lang === 'es');
+  document.documentElement.lang = lang;
+  renderExamples();
+}
+
+var EXAMPLE_KEYS = ['ex1', 'ex2', 'ex3', 'ex4', 'ex5'];
+function renderExamples() {
+  var row = $('exrow');
+  row.innerHTML = '';
+  EXAMPLE_KEYS.forEach(function (k) {
+    var b = document.createElement('button');
+    b.className = 'ex';
+    b.textContent = I18N[lang][k];
+    b.addEventListener('click', function () { $('utt').value = I18N[lang][k]; });
+    row.appendChild(b);
+  });
+}
+
+function renderGrid() {
+  var g = $('vgrid');
+  g.innerHTML = '';
+  MODELS.forEach(function (m) {
+    var c = document.createElement('div');
+    c.className = 'vcard';
+    var n = document.createElement('div'); n.className = 'vname'; n.textContent = m.id;
+    var p = document.createElement('div'); p.className = 'vparams'; p.textContent = m.params;
+    var b = document.createElement('button'); b.className = 'vote' + (myVote === m.id ? ' voted' : '');
+    b.setAttribute('data-model', m.id);
+    b.textContent = myVote === m.id ? I18N[lang].voted : I18N[lang].vote;
+    b.addEventListener('click', function () { castVote(m.id); });
+    c.appendChild(n); c.appendChild(p); c.appendChild(b);
+    g.appendChild(c);
+  });
+}
+
+function renderTallies() {
+  var t = tallies();
+  var ids = MODELS.map(function (m) { return m.id; });
+  var max = Math.max.apply(null, ids.map(function (id) { return t[id] || 0; }));
+  var box = $('tallies');
+  box.innerHTML = '';
+  ids.slice().sort(function (a, b) { return (t[b] || 0) - (t[a] || 0); }).forEach(function (id) {
+    var row = document.createElement('div'); row.className = 't-row';
+    var nm = document.createElement('span'); nm.className = 't-name'; nm.textContent = id;
+    var nn = document.createElement('span'); nn.className = 't-n'; nn.textContent = t[id] || 0;
+    var tr = document.createElement('div'); tr.className = 't-track';
+    var fl = document.createElement('div'); fl.className = 't-fill';
+    fl.style.width = (max ? Math.round(((t[id] || 0) / max) * 100) : 0) + '%';
+    tr.appendChild(fl); row.appendChild(nm); row.appendChild(nn); row.appendChild(tr);
+    box.appendChild(row);
+  });
+}
+
+function castVote(id) {
+  if (myVote === id) { return; }
+  myVote = id;
+  votes = { __myVote: id, [id]: 1 };
+  saveVotes(votes);
+  renderGrid();
+  renderTallies();
+}
+
+function runDecision() {
+  var text = $('utt').value.trim();
+  if (!text) { $('utt').focus(); return; }
+  var r = classify(text);
+  var T = I18N[lang];
+  var pol = $('v-pol');
+  pol.className = 'pol p-' + r.pol;
+  pol.textContent = T.policies[r.pol];
+  $('v-conf').textContent = T.confLabel + ': ' + (r.rule ? '“' + r.rule + '” · p≈' + r.conf.toFixed(2) : '—');
+  $('v-rule').textContent = r.rule ? ('match: ' + r.rule) : T.ruleNone;
+  $('verdict').classList.add('show');
+  /* 1200ms vs 12ms — tiny bar uses real scale (12/1200 = 1%) */
+  $('bar-big').style.width = '100%';
+  $('bar-tiny').style.width = '1%';
+  $('bar-big-ms').textContent = '~1200 ' + T.ms;
+  $('bar-tiny-ms').textContent = '~12 ' + T.ms + '  (100× faster)';
+}
+
+$('go').addEventListener('click', runDecision);
+$('lang-en').addEventListener('click', function () { lang = 'en'; renderStatic(); renderGrid(); });
+$('lang-es').addEventListener('click', function () { lang = 'es'; renderStatic(); renderGrid(); });
+
+renderStatic();
+renderGrid();
+renderTallies();
+</script>
+</body>
+</html>
