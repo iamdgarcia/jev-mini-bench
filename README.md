@@ -10,6 +10,8 @@ pinned: false
 ---
 
 # ⚡ Jev Mini Bench
+**▶ Try it live:** <https://iamdgarcia-jev-mini-bench.static.hf.space> · **Code on GitHub:** <https://github.com/iamdgarcia/jev-mini-bench>
+
 
 The decision-model wave, in your pocket. TypeSafe's **Jev** showed a tiny model can route a
 support conversation with a single yes/no decision — dozens of open repros followed
