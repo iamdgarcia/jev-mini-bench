@@ -25,6 +25,10 @@ support conversation with a single yes/no decision — dozens of open repros fol
 
 🔗 Full benchmarks & news: [jev-decision-index](https://huggingface.co/spaces/multimodalart/jev-decision-index)
 
+> **Went mainstream (Oct 2026):** livekit/agents v1.8.8 now ships TypeSafe Jev decision-models
+> natively (background probability/choice/score evaluations that never delay the reply) — the same
+> routing pattern this bench lets you feel.
+
 Built by [iamdgarcia](https://huggingface.co/iamdgarcia) — realtime voice agent engineer.
 
 Further reading: [JEV-as-a-Judge: Accept When Confident, Escalate When Unsure](https://www.alphaxiv.org/abs/2609.26550) (CMU, 2026) — the academic case for decision-only models as first-class routing components.
