@@ -28,6 +28,10 @@ support conversation with a single yes/no decision — dozens of open repros fol
 > **Went mainstream (Oct 2026):** livekit/agents v1.8.8 now ships TypeSafe Jev decision-models
 > natively (background probability/choice/score evaluations that never delay the reply) — the same
 > routing pattern this bench lets you feel.
+>
+> **Honest caveat:** an empirical study (NJU/TUM, arXiv:2610.13092) finds per-decision savings
+> don't always transfer to task success — the number that matters is resources per *delivered*
+> outcome, not per decision. Fast decisions are a component, not a guarantee.
 
 Built by [iamdgarcia](https://huggingface.co/iamdgarcia) — realtime voice agent engineer.
 
