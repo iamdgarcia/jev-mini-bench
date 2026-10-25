@@ -86,6 +86,12 @@
     margin-top: 10px; font-size: 11.5px; color: var(--dim);
     border-left: 3px solid var(--acc); padding-left: 8px;
   }
+  .crow { padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .crow:last-child { border-bottom: 0; }
+  .crow .cn { font-weight: 800; font-size: 14px; }
+  .crow .cn a { text-decoration: none; }
+  .crow .cd { color: var(--dim); font-size: 13px; margin-top: 1px; }
+  .crow .cv { font-size: 13px; color: var(--ok); font-weight: 600; margin-top: 2px; }
   .bars { margin-top: 14px; display: grid; gap: 10px; }
   .bar-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; font-size: 12.5px; }
   .bar-name { color: var(--dim); }
@@ -171,10 +177,36 @@
   </section>
 
   <section>
+    <h2 id="s3-h"></h2>
+    <p class="sub" id="s3-sub"></p>
+    <div class="card">
+      <div class="bars">
+        <div class="bar-row"><span class="bar-name" id="s3-b1-name"></span><span class="bar-ms" id="s3-b1-ms"></span>
+          <div class="bar-track"><div class="bar-fill bf-big" id="s3-b1"></div></div></div>
+        <div class="bar-row"><span class="bar-name" id="s3-b2-name"></span><span class="bar-ms" id="s3-b2-ms"></span>
+          <div class="bar-track"><div class="bar-fill bf-tiny" id="s3-b2"></div></div></div>
+        <div class="bar-row"><span class="bar-name" id="s3-b3-name"></span><span class="bar-ms" id="s3-b3-ms"></span>
+          <div class="bar-track"><div class="bar-fill bf-tiny" id="s3-b3"></div></div></div>
+      </div>
+      <div class="honest" id="s3-src"></div>
+    </div>
+  </section>
+
+  <section>
     <h2 id="s2-h"></h2>
     <p class="sub" id="s2-sub"></p>
     <div class="vgrid" id="vgrid"></div>
     <div class="tallies" id="tallies"></div>
+  </section>
+
+  <section>
+    <h2 id="s4-h"></h2>
+    <p class="sub" id="s4-sub"></p>
+    <div class="card">
+      <div id="s4-rows"></div>
+      <div class="honest" id="s4-pat"></div>
+      <div class="honest" id="s4-src" style="margin-top:6px"></div>
+    </div>
   </section>
 
   <footer id="footer"></footer>
@@ -207,6 +239,24 @@ var I18N = {
     ms: 'ms',
     confLabel: 'rule hit',
     ruleNone: 'no rule matched → default: answer_faq',
+    s3H: 'Decisions inside the voice loop',
+    s3Sub: 'The same block of 10 voice-loop decisions, three ways to run it. Measured by DuplexJev on an 8×H200 node:',
+    s3b1: 'Generated as JSON',
+    s3b2: 'Read as single tokens',
+    s3b3: 'Batched windows (160-200ms, ~12ms/event)',
+    s3src: 'Source: DuplexJev (arXiv:2610.02638), verified numbers: 1.57s vs 92ms for the same 10 decisions, 94-103ms per batched window of 8 events. They also measure: 30% of ALL input tokens in a duplex LLM go to closed decisions. The demo bar above (1200 vs 12ms) is our own heuristic, not theirs.',
+    s4H: 'The decision layer, cluster watch',
+    s4Sub: 'Six verified systems defining voice-loop decisions as a field (Sep-Oct 2026). Numbers are the papers\' own, from full reads.',
+    s4rows: [
+      { n: 'DuplexJev', url: 'https://arxiv.org/abs/2610.02638', d: 'Frozen LLM + ASR encoder; decisions read as single tokens, nothing decoded', v: '92ms vs 1.57s per 10 decisions; 1,613 dec/s within 0.5s (8\u00d7H200)' },
+      { n: 'FD-VAD', url: 'https://arxiv.org/abs/2609.35791', d: 'ASR-free semantic endpointer: causal audio windows \u2192 CONTINUE/STOP', v: 'EOT recall 0.853 at FP \u2264 0.10, zero-shot (TurnBench dev)' },
+      { n: 'HiThink Turn', url: 'https://arxiv.org/abs/2609.34096', d: 'Separates response intent from completeness; conditions on playback state', v: 'interruption success 89% \u2192 98% (Full-Duplex-Bench)' },
+      { n: 'Voice-Light', url: 'https://arxiv.org/abs/2609.20995', d: 'Cascaded full-duplex: reversible playback + speculative generation', v: 'learned EOT 12.53% recall vs Silero timing 95.60%: hybrid kept, honest negative' },
+      { n: 'Floor-taking study', url: 'https://arxiv.org/abs/2609.19596', d: 'Do duplex models self-select to speak when content demands it?', v: 'hazard warnings in 4\u20137% of replies; false-fact challenges 14\u201315%' },
+      { n: 'NFSM', url: 'https://arxiv.org/abs/2609.03321', d: 'Turn-taking on a causal FSM tape; real human-human audio for turns, text for semantics', v: 'decoupled data: LLMs cannot simulate acoustic temporal dynamics' }
+    ],
+    s4pat: 'Common ground: typed closed readouts instead of generated text, confidence gating before commitment, chunk-boundary robustness. Benchmarks to track: TurnBench, Full-Duplex-Bench, Easy-Turn, qa100.',
+    s4src: 'All six papers read in full (Oct 2026); this section lists their own numbers. The cluster moves fast: re-check before quoting.',
     s2H: 'Community vote',
     s2Sub: 'Tap your favorite repro. Votes live in this device (localStorage).',
     voted: 'Voted ✓',
@@ -236,6 +286,24 @@ var I18N = {
     ms: 'ms',
     confLabel: 'regla aplicada',
     ruleNone: 'sin coincidencia → por defecto: answer_faq',
+    s3H: 'Decisiones dentro del bucle de voz',
+    s3Sub: 'El mismo bloque de 10 decisiones del voice loop, de tres maneras. Medido por DuplexJev en un nodo 8×H200:',
+    s3b1: 'Generadas como JSON',
+    s3b2: 'Leídas como tokens únicos',
+    s3b3: 'Ventanas batched (160-200ms, ~12ms/evento)',
+    s3src: 'Fuente: DuplexJev (arXiv:2610.02638), números verificados: 1,57s vs 92ms por las mismas 10 decisiones, 94-103ms por ventana batched de 8 eventos. También miden: el 30% de TODOS los tokens de entrada de un LLM duplex se van en decisiones cerradas. La barra de la demo de arriba (1200 vs 12ms) es heurística nuestra, no suya.',
+    s4H: 'La capa de decisiones, radar del cluster',
+    s4Sub: 'Seis sistemas verificados que definen las decisiones del bucle de voz como campo (sep-oct 2026). Los números son de los propios papers, leídos completos.',
+    s4rows: [
+      { n: 'DuplexJev', url: 'https://arxiv.org/abs/2610.02638', d: 'LLM congelado + encoder ASR; decisiones leídas como tokens únicos, nada decodificado', v: '92ms vs 1,57s por 10 decisiones; 1.613 dec/s en 0,5s (8\u00d7H200)' },
+      { n: 'FD-VAD', url: 'https://arxiv.org/abs/2609.35791', d: 'Endpointer semántico sin ASR: ventanas causales de audio \u2192 CONTINUE/STOP', v: 'recall EOT 0,853 con FP \u2264 0,10, zero-shot (TurnBench dev)' },
+      { n: 'HiThink Turn', url: 'https://arxiv.org/abs/2609.34096', d: 'Separa intención de respuesta de completitud; condiciona al estado de playback', v: 'interrupción exitosa 89% \u2192 98% (Full-Duplex-Bench)' },
+      { n: 'Voice-Light', url: 'https://arxiv.org/abs/2609.20995', d: 'Cascada full-duplex: playback reversible + generación especulativa', v: 'EOT aprendido 12,53% recall vs Silero 95,60%: gana el híbrido, resultado negativo honesto' },
+      { n: 'Estudio de floor-taking', url: 'https://arxiv.org/abs/2609.19596', d: '\u00bfSe auto-seleccionan los modelos duplex para hablar cuando el contenido lo pide?', v: 'avisos de peligro en el 4\u20137% de las respuestas; reto de falsedades 14\u201315%' },
+      { n: 'NFSM', url: 'https://arxiv.org/abs/2609.03321', d: 'Turn-taking en una cinta FSM causal; audio humano-humano real para turnos, texto para semántica', v: 'datos desacoplados: los LLM no simulan la dinámica temporal acústica' }
+    ],
+    s4pat: 'Terreno común: readouts cerrados y tipados en vez de texto generado, gating de confianza antes de comprometer, robustez a cortes de chunk. Benchmarks a seguir: TurnBench, Full-Duplex-Bench, Easy-Turn, qa100.',
+    s4src: 'Los seis papers leídos completos (oct 2026); esta sección lista SUS números. El cluster se mueve rápido: re-verificar antes de citar.',
     s2H: 'Voto de la comunidad',
     s2Sub: 'Toca tu réplica favorita. Los votos viven en este dispositivo (localStorage).',
     voted: 'Votado ✓',
@@ -331,6 +399,27 @@ function renderStatic() {
   $('bar-big-name').textContent = T.bigLLM;
   $('bar-tiny-name').textContent = T.tinyModel;
   $('honest').textContent = T.honest;
+  $('s3-h').textContent = T.s3H;
+  $('s3-sub').textContent = T.s3Sub;
+  $('s3-b1-name').textContent = T.s3b1;
+  $('s3-b2-name').textContent = T.s3b2;
+  $('s3-b3-name').textContent = T.s3b3;
+  $('s3-b1-ms').textContent = '1570 ' + T.ms;
+  $('s3-b2-ms').textContent = '92 ' + T.ms;
+  $('s3-b3-ms').textContent = '94-103 ' + T.ms + ' / 8 events';
+  $('s3-src').textContent = T.s3src;
+  $('s4-h').textContent = T.s4H;
+  $('s4-sub').textContent = T.s4Sub;
+  $('s4-pat').textContent = T.s4pat;
+  $('s4-src').textContent = T.s4src;
+  $('s4-rows').innerHTML = T.s4rows.map(function (r) {
+    return '<div class="crow"><div class="cn"><a href="' + r.url + '" target="_blank" rel="noopener">' + r.n + '</a></div>' +
+      '<div class="cd">' + r.d + '</div><div class="cv">' + r.v + '</div></div>';
+  }).join('');
+  /* 1570ms JSON vs 92ms tokens vs ~12ms/event batched, to scale */
+  $('s3-b1').style.width = '100%';
+  $('s3-b2').style.width = '6%';
+  $('s3-b3').style.width = '1%';
   $('s2-h').textContent = T.s2H;
   $('s2-sub').textContent = T.s2Sub;
   $('footer').innerHTML = T.footer;
