@@ -16,6 +16,11 @@ tags:
 # ⚡ Jev Mini Bench
 **▶ Try it live:** <https://iamdgarcia-jev-mini-bench.static.hf.space> · **Code on GitHub:** <https://github.com/iamdgarcia/jev-mini-bench>
 
+**What this probes:** the unit of latency budget in a conversational agent — per-request (one
+big-LLM call per turn) vs per-event (many tiny decisions per turn). The trade-off the wave
+rests on: pay 1,570 ms once, or 12 ms ninety-four times. Only you can feel which budget your
+agent's loop survives.
+
 
 The decision-model wave, in your pocket. TypeSafe's **Jev** showed a tiny model can route a
 support conversation with a single yes/no decision — dozens of open repros followed
